@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="callModes">
+        <item>Conference</item>
+        <item>P2P</item>
+        <item>Licode</item>
+    </string-array>
+    <string-array name="roomUrls_Conference">
+        <item>ws://artvcroom.d3119.dl.alipaydev.com/ws</item>
+    </string-array>
+    <string-array name="roomUrls_P2P">
+        <item>https://www.antmedia-apprtc.top</item>
+    </string-array>
+    <string-array name="roomUrls_Licode">
+        <item>http://120.76.245.78:3001</item>
+    </string-array>
+
+    <string-array name="videoResolutions">
+        <item>Default</item>
+        <item>HD (1280 x 720)</item>
+        <item>VGA (640 x 480)</item>
+        <item>QVGA (480 x 360)</item>
+        <item>VGA_XY (640 x 360)</item>
+        <item>QVGA_XY (320 x 360)</item>
+    </string-array>
+
+    <string-array name="videoResolutionsValues">
+        <item>Default</item>
+        <item>1280 x 720</item>
+        <item>640 x 480</item>
+        <item>480 x 360</item>
+        <item>640 x 360</item>
+        <item>320 x 360</item>
+    </string-array>
+
+    <string-array name="encodeResolutions">
+        <item>Default</item>
+        <item>HD (1280 x 720)</item>
+        <item>VGA (640 x 480)</item>
+        <item>QVGA (480 x 360)</item>
+        <item>VGA_XY (640 x 360)</item>
+        <item>QVGA_XY (320 x 360)</item>
+    </string-array>
+
+    <string-array name="encodeResolutionsValues">
+        <item>Default</item>
+        <item>1280 x 720</item>
+        <item>640 x 480</item>
+        <item>480 x 360</item>
+        <item>640 x 360</item>
+        <item>320 x 360</item>
+    </string-array>
+
+    <string-array name="cameraFps">
+        <item>Default</item>
+        <item>30 fps</item>
+        <item>15 fps</item>
+    </string-array>
+
+    <string-array name="minFps">
+        <item>Default</item>
+        <item>1 fps</item>
+        <item>2 fps</item>
+        <item>3 fps</item>
+        <item>5 fps</item>
+        <item>8 fps</item>
+        <item>10 fps</item>
+    </string-array>
+
+    <string-array name="startBitrate">
+        <item>Default</item>
+        <item>Manual</item>
+    </string-array>
+
+    <string-array name="videoCodecs">
+        <item>VP8</item>
+        <item>X264</item>
+    </string-array>
+
+    <string-array name="audioCodecs">
+        <item>OPUS</item>
+        <item>ISAC</item>
+    </string-array>
+
+    <string-array name="audioSampleRates">
+        <item>8000</item>
+        <item>16000</item>
+        <item>48000</item>
+    </string-array>
+
+    <string-array name="speakerphone">
+        <item>Auto (proximity sensor)</item>
+        <item>Enabled</item>
+        <item>Disabled</item>
+    </string-array>
+
+    <string-array name="speakerphoneValues">
+        <item>auto</item>
+        <item>true</item>
+        <item>false</item>
+    </string-array>
+
+    <string-array name="roomListContextMenu">
+        <item>Remove favorite</item>
+    </string-array>
+
+</resources>
