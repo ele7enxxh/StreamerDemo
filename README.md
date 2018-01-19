@@ -1,4 +1,4 @@
-# 蚂蚁实时视频通信推流Android SDK使用说明
+# 蚂蚁实时视频通信Android推流SDK使用说明
 
   Artvc Streamer Android SDK是蚂蚁金服支付宝多媒体团队推出的 Android 平台上使用的软件开发工具包(SDK), 负责视频直播的采集和推流。
 ## 功能特点
