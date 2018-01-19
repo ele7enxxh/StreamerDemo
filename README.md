@@ -107,7 +107,7 @@ mStreamer.stopStream();
 ````
 - Activity的生命周期回调处理
 ```java
-public class CameraActivity extends Activity {
+public class CallActivity extends Activity {
 
     // ...
     @Override
