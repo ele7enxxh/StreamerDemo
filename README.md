@@ -11,7 +11,7 @@ Artvc Streamer Android SDK是蚂蚁金服支付宝多媒体团队推出的 Andro
 * [x] 视频分辨率：支持360P, 480P, 540P和720P
 * [x] 音视频目标码率：可设
 * [x] 支持手机端单摄像头推流
-* [x] 支持Android娃娃机双摄像头推流
+* [x] 支持搭载Android系统的娃娃机双摄像头同时推流
 
 ## 运行环境
 
@@ -33,10 +33,8 @@ Artvc Streamer Android SDK是蚂蚁金服支付宝多媒体团队推出的 Andro
     }
 ````
 接着在 gradle 的dependencies配置中加入
+````gradle
    compile(name: 'streamer-x.x.x', ext: 'aar')
-- 修改proguard文件，需要保持org.webrtc下的所有类：
-````
--keep class org.webrtc.** { *;}
 ````
 - 在AndroidManifest.xml文件中申请相应权限
 ````xml
@@ -62,12 +60,12 @@ Artvc Streamer Android SDK是蚂蚁金服支付宝多媒体团队推出的 Andro
 - 创建并配置StreamerConfig
 ````java
 StreamerConfig mConfig = new StreamerConfig(machineId,roomUrl,signature);
-参数说明：
-machineId: 推流方唯一编号，比如娃娃机机器ID
-roomUrl:   推流房间管理服务器地址，具体请咨询15986802725
-signature: 推流凭证，由业务方和房间管理器方双方协商，凭证认证通过，才允许推流
-
 ````
+参数说明：
+machineId: 推流方唯一编号，比如娃娃机机器ID编号2000
+roomUrl:   推流房间管理服务器地址，具体请咨询15986802725，测试地址:ws://artvcroom.d3119.dl.alipaydev.com/ws
+signature: 推流凭证，由业务方和房间管理器方双方协商，凭证认证通过，才允许推流,测试凭证:signature
+
 - 创建推流事件监听，可以收到推流过程中的异步事件(该步骤可选)。
 **注意：该回调直接运行在产生事件的各工作线程中，不要在该回调中做任何耗时的操作，或者直接调用推流API。**
 ````java
@@ -99,14 +97,14 @@ mStreamer.setOnInfoListener(mOnInfoListener);
 mStreamer.setOnErrorListener(mOnErrorListener);
 ````
 - 开始推流
+````java
 mStreamer.startStream();
 ````
 - 停止推流
 ````java
 mStreamer.stopStream();
 ````
-- Activity的生命周期回调处理  
-**采集的状态依赖于Activity的生命周期，所以必须在Activity的生命周期中也调用SDK相应的接口。**
+- Activity的生命周期回调处理
 ```java
 public class CameraActivity extends Activity {
 
