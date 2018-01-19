@@ -1,6 +1,6 @@
 # 蚂蚁实时视频通信推流Android SDK使用说明
 
-Artvc Streamer Android SDK是蚂蚁金服支付宝多媒体团队推出的 Android 平台上使用的软件开发工具包(SDK), 负责视频直播的采集和推流。
+  Artvc Streamer Android SDK是蚂蚁金服支付宝多媒体团队推出的 Android 平台上使用的软件开发工具包(SDK), 负责视频直播的采集和推流。
 ## 功能特点
 
 * [x] 支持软编和硬编
@@ -32,7 +32,7 @@ Artvc Streamer Android SDK是蚂蚁金服支付宝多媒体团队推出的 Andro
         flatDir{ dirs 'libs'}
     }
 ````
-接着在 gradle 的dependencies配置中加入
+- 接着在 gradle 的dependencies配置中加入
 ````gradle
    compile(name: 'streamer-x.x.x', ext: 'aar')
 ````
@@ -61,10 +61,11 @@ Artvc Streamer Android SDK是蚂蚁金服支付宝多媒体团队推出的 Andro
 ````java
 StreamerConfig mConfig = new StreamerConfig(machineId,roomUrl,signature);
 ````
-参数说明：
-machineId: 推流方唯一编号，比如娃娃机机器ID编号2000
-roomUrl:   推流房间管理服务器地址，具体请咨询15986802725，测试地址:ws://artvcroom.d3119.dl.alipaydev.com/ws
-signature: 推流凭证，由业务方和房间管理器方双方协商，凭证认证通过，才允许推流,测试凭证:signature
+   machineId: 推流方唯一编号，比如娃娃机机器ID编号2000
+
+   roomUrl: 推流房间管理服务器地址，测试地址:ws://artvcroom.d3119.dl.alipaydev.com/ws
+
+   signature: 推流凭证，由业务方和房间管理器方协商，认证通过，才允许推流,测试凭证:signature
 
 - 创建推流事件监听，可以收到推流过程中的异步事件(该步骤可选)。
 **注意：该回调直接运行在产生事件的各工作线程中，不要在该回调中做任何耗时的操作，或者直接调用推流API。**
