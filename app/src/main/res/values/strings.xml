@@ -191,7 +191,7 @@
     <string name="pref_tracing_title">Debug performance tracing.</string>
     <string name="pref_tracing_dlg">Debug performance tracing.</string>
     <string name="pref_tracing_default" translatable="false">false</string>
-    <string name="pref_videocodec_default">OpenH264</string>
+    <string name="pref_videocodec_default">X264</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_server_local247">Local.247</string>
