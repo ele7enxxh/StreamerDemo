@@ -154,9 +154,9 @@ public enum StreamerErrorCode {
     一类是推流检测到摄像头出现问题，比如卡死，帧率过低等
 - 处理
     发生错误后，mOnErrorListener.onError方法会得到回调，在回调里面可以进行错误处理，典型的处理包括下面几种<br>
-    * STREAMER_ERROR_ICE_ERROR：<br>
+    STREAMER_ERROR_ICE_ERROR：<br>
     推流服务器出现了异常，此时业务方可以调用mStreamer.restartStream()重新推流<br>
-    * STREAMER_ERROR_FROM_CAMERA:<br>
+    STREAMER_ERROR_FROM_CAMERA:<br>
     摄像头出现了异常，此时业务方可以上报相关告警到业务平台，人为干预处理
 ## 反馈与建议
 - TEL：15986802725
