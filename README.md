@@ -149,15 +149,14 @@ public enum StreamerErrorCode {
     ......
 ````
 - 分类
-    错误码大体上分为三类，一类是来自房间服务器返回的错误，比如创建房间参数不正确，鉴权不通过等
-    一类是推流到和推流服务器的连接出现了问题，比如推流服务器重启了等
+    错误码大体上分为三类，一类是来自房间服务器返回的错误，比如创建房间参数不正确，鉴权不通过等<br>
+    一类是推流到和推流服务器的连接出现了问题，比如推流服务器重启了等<br>
     一类是推流检测到摄像头出现问题，比如卡死，帧率过低等
 - 处理
-    发生错误后，mOnErrorListener.onError方法会得到回调，在回调里面可以进行错误处理，典型的处理包括下面几种
-    * STREAMER_ERROR_ICE_ERROR：
-    推流服务器出现了异常，此时业务方可以调用mStreamer.stopStream()停止推流，然后在接收到STREAMER_INFO_STOPPED
-    事件后调用mStreamer.startStream()重新推流
-    * STREAMER_ERROR_FROM_CAMERA:
+    发生错误后，mOnErrorListener.onError方法会得到回调，在回调里面可以进行错误处理，典型的处理包括下面几种<br>
+    * STREAMER_ERROR_ICE_ERROR：<br>
+    推流服务器出现了异常，此时业务方可以调用mStreamer.restartStream()重新推流<br>
+    * STREAMER_ERROR_FROM_CAMERA:<br>
     摄像头出现了异常，此时业务方可以上报相关告警到业务平台，人为干预处理
 ## 反馈与建议
 - TEL：15986802725
