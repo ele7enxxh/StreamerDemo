@@ -156,12 +156,12 @@ public enum StreamerErrorCode {
 - 处理
     发生错误后，mOnErrorListener.onError方法会得到回调，在回调里面可以进行错误处理，典型的处理包括下面几种<br>
     STREAMER_ERROR_FROM_ROOM：<br>
-    房间服务器返回错误信息，需要根据错误描述去进一步排查服务端错误
+    房间服务器返回错误信息，需要根据错误描述去进一步排查服务端错误<br>
     STREAMER_ERROR_ICE_ERROR：<br>
     推流服务器出现了重启等异常，此时业务方可以调用mStreamer.restartStream()重新推流<br>
     STREAMER_ERROR_FROM_CAMERA:<br>
-    摄像头出现了异常，此时业务方可以上报相关告警到业务平台，人为干预处理
-    STREAMER_ERROR_PUSH_TIMEOUT:<br>
+    摄像头出现了异常，此时业务方可以上报相关告警到业务平台，人为干预处理<br>
+    STREAMER_ERROR_PUSH_TIMEOUT:<br>
     3秒内推流不成功，可能是服务器出现异常，比如有些信令不回响应也不报错等，需要去排查服务器
 ## 反馈与建议
 - TEL：15986802725
