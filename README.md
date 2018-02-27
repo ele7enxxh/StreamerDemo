@@ -68,7 +68,7 @@ StreamerConfig mConfig = new StreamerConfig(machineId,roomUrl,signature);
    signature: 推流凭证，由业务方和房间管理器方协商，认证通过，才允许推流,测试凭证:signature
 
 - 创建推流事件监听，可以收到推流过程中的异步事件(该步骤可选)。
-**注意：该回调直接运行在产生事件的各工作线程中，不要在该回调中做任何耗时的操作，或者直接调用推流API。**
+**注意：该回调直接运行在产生事件的各工作线程中，不要在该回调中做任何耗时的操作。**
 ````java
 public OnInfoListener mOnInfoListener = new OnInfoListener() {
     @Override
