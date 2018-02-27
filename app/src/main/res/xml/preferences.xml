@@ -11,6 +11,12 @@
             android:defaultValue="@string/pref_videocall_default" />
 
         <CheckBoxPreference
+            android:key="@string/pref_streamencrypt_key"
+            android:title="@string/pref_streamencrypt_title"
+            android:dialogTitle="@string/pref_streamencrypt_dlg"
+            android:defaultValue="@string/pref_streamencrypt_default" />
+
+        <CheckBoxPreference
             android:key="@string/pref_hwcodec_open_key"
             android:title="@string/pref_hwcodec_open_title"
             android:dialogTitle="@string/pref_hwcodec_open_dlg"

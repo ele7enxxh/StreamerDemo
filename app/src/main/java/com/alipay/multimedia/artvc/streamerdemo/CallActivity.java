@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -42,6 +43,7 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
   public static final String EXTRA_TOKENID = "org.appspot.apprtc.TOKENID";
   public static final String EXTRA_LOOPBACK = "org.appspot.apprtc.LOOPBACK";
   public static final String EXTRA_VIDEO_CALL = "org.appspot.apprtc.VIDEO_CALL";
+  public static final String EXTRA_STREAM_ENCRYPT = "org.appspot.apprtc.STREAM_ENCRYPT";
   public static final String EXTRA_CALL_MODE = "org.appspot.apprtc.CALL_MODE";
   public static final String EXTRA_SCREENCAPTURE = "org.appspot.apprtc.SCREENCAPTURE";
   public static final String EXTRA_CAMERA2 = "org.appspot.apprtc.CAMERA2";
@@ -138,7 +140,24 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
   private ArtvcStreamer.OnErrorListener errorListener = new ArtvcStreamer.OnErrorListener() {
     @Override
     public void onError(StreamerErrorCode what, String id, String msg) {
-      Log.e(TAG,"Error:" + what);
+      StringBuilder error = new StringBuilder();
+      error.append(what).append('\n')
+              .append("id:").append(id).append('\n')
+              .append("msg:").append(msg);
+      logAndToast(error.toString());
+      switch (what){
+        case STREAMER_ERROR_ICE_ERROR:
+          Log.e(TAG,"ice error,begin to retry");
+          toggleCallControlFragmentVisibility();
+          streamer.restartStream();
+          break;
+        case STREAMER_ERROR_FROM_CAMERA:
+          Log.e(TAG,"camera " + id + " error:" + msg);
+          break;
+        case STREAMER_ERROR_PUSH_TIMEOUT:
+          Log.e(TAG,"stream to server overtime");
+          break;
+      }
     }
   };
 
@@ -155,6 +174,9 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
         case STREAMER_INFO_GET_STAT_SUCCESS:
           StatsReport[] report = (StatsReport[])obj;
           hudFragment.updateEncoderStatistics(report);
+          break;
+        case STREAMER_INFO_PUSH_SUCCESS:
+          Log.i(TAG,id + " stream to server success");
           break;
       }
     }
@@ -199,10 +221,12 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
 
     // Get Intent parameters.
     roomId = intent.getStringExtra(EXTRA_ROOMID);
-    Log.d(TAG, "Room ID: " + roomId);
+    token = intent.getStringExtra(EXTRA_TOKENID);
+    Log.d(TAG, "Room ID: " + roomId + ",token : " + token);
 
     String codecName = intent.getStringExtra(EXTRA_VIDEOCODEC);
     Boolean openHwEncode = intent.getBooleanExtra(EXTRA_HWCODEC_OPEN,false);
+    Boolean streamEncrypted = intent.getBooleanExtra(EXTRA_STREAM_ENCRYPT,true);
 
     // Create CPU monitor
     cpuMonitor = new CpuMonitor(this);
@@ -222,9 +246,15 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
     ft.commit();
 
     userId = String.valueOf(System.currentTimeMillis());
+    if(!TextUtils.isEmpty(token)){
+      userId = token;
+    }
     config = new StreamerConfig(userId,roomUri,StreamerConstants.DEFAULT_SIGNATURE);
     config.mVideoCodecId = AppRTCUtils.getCodecId(codecName);
     config.mEncodeMethod = openHwEncode ? StreamerConstants.ENCODE_METHOD_HARDWARE : StreamerConstants.ENCODE_METHOD_SOFTWARE;
+    if(!streamEncrypted){
+      config.addOrUpdateOption(StreamerConstants.OPTION_KEY_DTLS_SRTP_KEY_AGREEMENT_CONSTRAINT,StreamerConstants.FALSE);
+    }
 
     streamer = new ArtvcStreamer(this,config);
     streamer.setOnErrorListener(errorListener);
@@ -368,7 +398,7 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
     if (logToast != null) {
       logToast.cancel();
     }
-    logToast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
+    logToast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
     logToast.show();
   }
 

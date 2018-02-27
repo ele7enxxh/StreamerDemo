@@ -44,6 +44,11 @@
     <string name="pref_videocall_dlg">Enable video in a call.</string>
     <string name="pref_videocall_default">true</string>
 
+    <string name="pref_streamencrypt_key">streamencrypt_preference</string>
+    <string name="pref_streamencrypt_title">Encrypt stream.</string>
+    <string name="pref_streamencrypt_dlg">Encrypt stream in a call.</string>
+    <string name="pref_streamencrypt_default">true</string>
+
     <string name="pref_screencapture_key">screencapture_preference</string>
     <string name="pref_screencapture_title">Use screencapture.</string>
     <string name="pref_screencapture_default">false</string>

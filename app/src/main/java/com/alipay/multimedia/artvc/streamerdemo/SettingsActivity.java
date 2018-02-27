@@ -25,6 +25,7 @@ import org.webrtc.voiceengine.WebRtcAudioUtils;
 public class SettingsActivity extends Activity implements OnSharedPreferenceChangeListener {
   private SettingsFragment settingsFragment;
   private String keyprefVideoCall;
+  private String keyprefStreamEncrypt;
   private String keyprefScreencapture;
   private String keyprefCamera2;
   private String keyprefBeautify;
@@ -59,6 +60,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     keyprefVideoCall = getString(R.string.pref_videocall_key);
+    keyprefStreamEncrypt = getString(R.string.pref_streamencrypt_key);
     keyprefScreencapture = getString(R.string.pref_screencapture_key);
     keyprefCamera2 = getString(R.string.pref_camera2_key);
     keyprefBeautify = getString(R.string.pref_beautify_key);
@@ -104,6 +106,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
         settingsFragment.getPreferenceScreen().getSharedPreferences();
     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     updateSummaryB(sharedPreferences, keyprefVideoCall);
+    updateSummaryB(sharedPreferences, keyprefStreamEncrypt);
     updateSummaryB(sharedPreferences, keyprefScreencapture);
     updateSummaryB(sharedPreferences, keyprefCamera2);
     updateSummaryB(sharedPreferences, keyprefBeautify);
@@ -197,6 +200,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
         || key.equals(keyprefStartAudioBitrateValue)) {
       updateSummaryBitrate(sharedPreferences, key);
     } else if (key.equals(keyprefVideoCall)
+        || key.equals(keyprefStreamEncrypt)
         || key.equals(keyprefScreencapture)
         || key.equals(keyprefCamera2)
         || key.equals(keyprefBeautify)

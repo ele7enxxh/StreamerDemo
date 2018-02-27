@@ -63,6 +63,7 @@ public class ConnectActivity extends Activity {
   private String roomUrl;
   private String callMode;
   private String keyprefVideoCallEnabled;
+  private String keyprefStreamEncrypted;
   private String keyprefP2PCallEnabled;
   private String keyprefScreencapture;
   private String keyprefCamera2;
@@ -103,6 +104,7 @@ public class ConnectActivity extends Activity {
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     keyprefVideoCallEnabled = getString(R.string.pref_videocall_key);
+    keyprefStreamEncrypted = getString(R.string.pref_streamencrypt_key);
     keyprefScreencapture = getString(R.string.pref_screencapture_key);
     keyprefCamera2 = getString(R.string.pref_camera2_key);
     keyprefBeautify = getString(R.string.pref_beautify_key);
@@ -382,6 +384,9 @@ public class ConnectActivity extends Activity {
     boolean videoCallEnabled = sharedPrefGetBoolean(R.string.pref_videocall_key,
         CallActivity.EXTRA_VIDEO_CALL, R.string.pref_videocall_default, useValuesFromIntent);
 
+    boolean streamEncrypt = sharedPrefGetBoolean(R.string.pref_streamencrypt_key,
+            CallActivity.EXTRA_STREAM_ENCRYPT, R.string.pref_streamencrypt_default, useValuesFromIntent);
+
     // Use screencapture option.
     boolean useScreencapture = sharedPrefGetBoolean(R.string.pref_screencapture_key,
         CallActivity.EXTRA_SCREENCAPTURE, R.string.pref_screencapture_default, useValuesFromIntent);
@@ -587,6 +592,7 @@ public class ConnectActivity extends Activity {
       intent.putExtra(CallActivity.EXTRA_TOKENID, tokenId);
       intent.putExtra(CallActivity.EXTRA_LOOPBACK, loopback);
       intent.putExtra(CallActivity.EXTRA_VIDEO_CALL, videoCallEnabled);
+      intent.putExtra(CallActivity.EXTRA_STREAM_ENCRYPT,streamEncrypt);
       intent.putExtra(CallActivity.EXTRA_HWCODEC_OPEN,hwCodecOpened);
       intent.putExtra(CallActivity.EXTRA_CALL_MODE,callMode);
       intent.putExtra(CallActivity.EXTRA_SCREENCAPTURE, useScreencapture);
