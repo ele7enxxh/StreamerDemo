@@ -152,6 +152,7 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
           streamer.restartStream();
           break;
         case STREAMER_ERROR_FROM_CAMERA:
+          streamer.restartCamera(id);
           Log.e(TAG,"camera " + id + " error:" + msg);
           break;
         case STREAMER_ERROR_PUSH_TIMEOUT:

@@ -160,7 +160,7 @@ public enum StreamerErrorCode {
     STREAMER_ERROR_ICE_ERROR：<br>
     推流服务器出现了重启等异常，此时业务方可以调用mStreamer.restartStream()重新推流<br>
     STREAMER_ERROR_FROM_CAMERA:<br>
-    摄像头出现了异常，此时业务方可以上报相关告警到业务平台，人为干预处理<br>
+    摄像头出现了异常，此时业务方可以上报相关告警到业务平台，并尝试调用mStreamer.restartCamera(id)重启故障摄像头,如果数次重启还是不能恢复，那么需要人工干预<br>
     STREAMER_ERROR_PUSH_TIMEOUT:<br>
     3秒内推流不成功，可能是服务器出现异常，比如有些信令不回响应也不报错等，需要去排查服务器
 ## 反馈与建议
