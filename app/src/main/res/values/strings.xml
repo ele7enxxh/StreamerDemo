@@ -108,8 +108,8 @@
 
     <string name="pref_hwcodec_open_key">hwcodec_enable_preference</string>
     <string name="pref_hwcodec_open_title">Use hardware Encode.</string>
-    <string name="pref_hwcodec_open_dlg">Use hardware encode is phone support.</string>
-    <string name="pref_hwcodec_open_default">true</string>
+    <string name="pref_hwcodec_open_dlg">Use hardware encode if phone support.</string>
+    <string name="pref_hwcodec_open_default">false</string>
 
     <string name="pref_capturetotexture_key">capturetotexture_preference</string>
     <string name="pref_capturetotexture_title">Video capture to surface texture.</string>

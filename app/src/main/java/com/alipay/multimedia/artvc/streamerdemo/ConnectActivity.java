@@ -171,6 +171,9 @@ public class ConnectActivity extends Activity {
           } else if(mode.equals("Conference")){
             urlAdapter = ArrayAdapter.createFromResource(ConnectActivity.this,R.array.roomUrls_Conference,android.R.layout.simple_spinner_item);
             tokenEditText.setVisibility(View.VISIBLE);
+          } else if(mode.equals("Conference_Test")){
+            urlAdapter = ArrayAdapter.createFromResource(ConnectActivity.this,R.array.roomUrls_Conference_Test,android.R.layout.simple_spinner_item);
+            tokenEditText.setVisibility(View.VISIBLE);
           } else if(mode.equals("Licode")){
             urlAdapter = ArrayAdapter.createFromResource(ConnectActivity.this,R.array.roomUrls_Licode,android.R.layout.simple_spinner_item);
             tokenEditText.setVisibility(View.VISIBLE);

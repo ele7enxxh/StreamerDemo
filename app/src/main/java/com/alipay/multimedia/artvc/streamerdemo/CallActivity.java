@@ -149,11 +149,11 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
         case STREAMER_ERROR_ICE_ERROR:
           Log.e(TAG,"ice error,begin to retry");
           toggleCallControlFragmentVisibility();
-          streamer.restartStream();
+          streamer.restartStream(StreamerConstants.DEFAULT_SIGNATURE);
           break;
         case STREAMER_ERROR_FROM_CAMERA:
-          streamer.restartCamera(id);
           Log.e(TAG,"camera " + id + " error:" + msg);
+          streamer.restartCamera(id);
           break;
         case STREAMER_ERROR_PUSH_TIMEOUT:
           Log.e(TAG,"stream to server overtime");
@@ -250,17 +250,25 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
     if(!TextUtils.isEmpty(token)){
       userId = token;
     }
-    config = new StreamerConfig(userId,roomUri,StreamerConstants.DEFAULT_SIGNATURE);
+    int targetEncWidth = intent.getIntExtra(EXTRA_ENCODER_VIDEO_WIDTH,640);
+    int targetEncHeight = intent.getIntExtra(EXTRA_ENCODER_VIDEO_HEIGHT,360);
+    int targetEncBitrate = intent.getIntExtra(EXTRA_VIDEO_BITRATE,400);
+
+    //roomUri = "wss://artvcroom.alipay.com:443/ws";
+    //roomUri = "ws://artvcroom.d3119.dl.alipaydev.com/ws";
+    config = new StreamerConfig(userId,roomUri);
     config.mVideoCodecId = AppRTCUtils.getCodecId(codecName);
     config.mEncodeMethod = openHwEncode ? StreamerConstants.ENCODE_METHOD_HARDWARE : StreamerConstants.ENCODE_METHOD_SOFTWARE;
     if(!streamEncrypted){
       config.addOrUpdateOption(StreamerConstants.OPTION_KEY_DTLS_SRTP_KEY_AGREEMENT_CONSTRAINT,StreamerConstants.FALSE);
     }
+    config.mTargetResolution = AppRTCUtils.getProfile(targetEncWidth,targetEncHeight);
+    config.mVideoKBitrate = targetEncBitrate;
 
     streamer = new ArtvcStreamer(this,config);
     streamer.setOnErrorListener(errorListener);
     streamer.setOnInfoListener(infoListener);
-    streamer.startStream();
+    streamer.startStream(StreamerConstants.DEFAULT_SIGNATURE);
   }
 
 
@@ -271,7 +279,7 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
     mediaProjectionPermissionResultCode = resultCode;
     mediaProjectionPermissionResultData = data;
 
-    streamer.startStream();
+    streamer.startStream(StreamerConstants.DEFAULT_SIGNATURE);
   }
 
 

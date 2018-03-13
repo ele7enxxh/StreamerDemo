@@ -30,6 +30,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
   private String keyprefCamera2;
   private String keyprefBeautify;
   private String keyprefResolution;
+  private String keyprefEncResolution;
   private String keyprefFps;
   private String keyprefCaptureQualitySlider;
   private String keyprefMaxVideoBitrateType;
@@ -65,6 +66,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
     keyprefCamera2 = getString(R.string.pref_camera2_key);
     keyprefBeautify = getString(R.string.pref_beautify_key);
     keyprefResolution = getString(R.string.pref_resolution_key);
+    keyprefEncResolution = getString(R.string.pref_encode_resolution_key);
     keyprefFps = getString(R.string.pref_fps_key);
     keyprefCaptureQualitySlider = getString(R.string.pref_capturequalityslider_key);
     keyprefMaxVideoBitrateType = getString(R.string.pref_maxvideobitrate_key);
@@ -111,6 +113,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
     updateSummaryB(sharedPreferences, keyprefCamera2);
     updateSummaryB(sharedPreferences, keyprefBeautify);
     updateSummary(sharedPreferences, keyprefResolution);
+    updateSummary(sharedPreferences, keyprefEncResolution);
     updateSummary(sharedPreferences, keyprefFps);
     updateSummaryB(sharedPreferences, keyprefCaptureQualitySlider);
     updateSummary(sharedPreferences, keyprefMaxVideoBitrateType);
@@ -188,6 +191,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     // clang-format off
     if (key.equals(keyprefResolution)
+        || key.equals(keyprefEncResolution)
         || key.equals(keyprefFps)
         || key.equals(keyprefMaxVideoBitrateType)
         || key.equals(keyPrefVideoCodec)
