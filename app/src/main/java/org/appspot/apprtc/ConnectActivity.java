@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package com.alipay.multimedia.artvc.streamerdemo;
+package org.appspot.apprtc;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -55,14 +55,18 @@ public class ConnectActivity extends Activity {
   private ImageButton connectButton;
   private ImageButton addFavoriteButton;
   private EditText roomEditText;
-  private EditText tokenEditText;
-  private Spinner callModeSpinner;
+  private EditText userIdEditText;
+  private EditText signEditText;
+  private Spinner bizNameSpinner;
   private Spinner roomUrlSpinner;
   private ListView roomListView;
   private SharedPreferences sharedPref;
   private String roomUrl;
-  private String callMode;
+  private String bizName;
   private String keyprefVideoCallEnabled;
+  private String keyprefAudioCallEnabled;
+  private String keyprefPullEnabled;
+  private String keyprefPushEnabled;
   private String keyprefStreamEncrypted;
   private String keyprefP2PCallEnabled;
   private String keyprefScreencapture;
@@ -104,6 +108,9 @@ public class ConnectActivity extends Activity {
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     keyprefVideoCallEnabled = getString(R.string.pref_videocall_key);
+    keyprefAudioCallEnabled = getString(R.string.pref_audiocall_key);
+    keyprefPullEnabled = getString(R.string.pref_pull_key);
+    keyprefPushEnabled = getString(R.string.pref_push_key);
     keyprefStreamEncrypted = getString(R.string.pref_streamencrypt_key);
     keyprefScreencapture = getString(R.string.pref_screencapture_key);
     keyprefCamera2 = getString(R.string.pref_camera2_key);
@@ -148,52 +155,40 @@ public class ConnectActivity extends Activity {
       }
     });
     roomEditText.requestFocus();
-    tokenEditText = (EditText) findViewById(R.id.token_edittext);
-    tokenEditText.setVisibility(View.INVISIBLE);
+    userIdEditText = (EditText) findViewById(R.id.userid_edittext);
+    signEditText = (EditText) findViewById(R.id.sign_edittext);
 
-    callModeSpinner = (Spinner) findViewById(R.id.call_mode);
+    bizNameSpinner = (Spinner) findViewById(R.id.biz_name);
     roomUrlSpinner = (Spinner) findViewById(R.id.room_url);
 
-    ArrayAdapter<CharSequence> adapter =
-            ArrayAdapter.createFromResource(this, R.array.callModes, android.R.layout.simple_spinner_item);
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    callModeSpinner.setAdapter(adapter);
-
-    callModeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    ArrayAdapter<CharSequence> bizAdapter =
+            ArrayAdapter.createFromResource(this, R.array.bizNames, android.R.layout.simple_spinner_item);
+    bizAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    bizNameSpinner.setAdapter(bizAdapter);
+    bizNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-          Spinner spinner = (Spinner)parent;
-          String mode =  (String)spinner.getItemAtPosition(position);
-          ArrayAdapter<CharSequence> urlAdapter = null;
-          if(mode.equals("P2P")){
-             urlAdapter = ArrayAdapter.createFromResource(ConnectActivity.this,R.array.roomUrls_P2P,android.R.layout.simple_spinner_item);
-             tokenEditText.setVisibility(View.INVISIBLE);
-          } else if(mode.equals("Conference")){
-            urlAdapter = ArrayAdapter.createFromResource(ConnectActivity.this,R.array.roomUrls_Conference,android.R.layout.simple_spinner_item);
-            tokenEditText.setVisibility(View.VISIBLE);
-          } else if(mode.equals("Conference_Test")){
-            urlAdapter = ArrayAdapter.createFromResource(ConnectActivity.this,R.array.roomUrls_Conference_Test,android.R.layout.simple_spinner_item);
-            tokenEditText.setVisibility(View.VISIBLE);
-          } else if(mode.equals("Licode")){
-            urlAdapter = ArrayAdapter.createFromResource(ConnectActivity.this,R.array.roomUrls_Licode,android.R.layout.simple_spinner_item);
-            tokenEditText.setVisibility(View.VISIBLE);
-          }
-          roomUrlSpinner.setAdapter(urlAdapter);
-          roomUrlSpinner.setSelection(0,true);
-          callMode = callModeSpinner.getSelectedItem().toString();
+          bizName = bizNameSpinner.getSelectedItem().toString();
       }
       @Override
       public void onNothingSelected(AdapterView<?> parent) {}
     });
 
+    ArrayAdapter<CharSequence> roomAdapter =
+        ArrayAdapter.createFromResource(this, R.array.roomUrls, android.R.layout.simple_spinner_item);
+    roomAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    roomUrlSpinner.setAdapter(roomAdapter);
     roomUrlSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
         @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {roomUrl = roomUrlSpinner.getSelectedItem().toString();}
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+          roomUrl = roomUrlSpinner.getSelectedItem().toString();
+        }
         @Override
         public void onNothingSelected(AdapterView<?> parent) {}
     });
 
-    callModeSpinner.setSelection(0,true);
+    bizNameSpinner.setSelection(0,true);
+    roomUrlSpinner.setSelection(0,true);
 
     roomListView = (ListView) findViewById(R.id.room_listview);
     roomListView.setEmptyView(findViewById(android.R.id.empty));
@@ -387,8 +382,23 @@ public class ConnectActivity extends Activity {
     boolean videoCallEnabled = sharedPrefGetBoolean(R.string.pref_videocall_key,
         CallActivity.EXTRA_VIDEO_CALL, R.string.pref_videocall_default, useValuesFromIntent);
 
+    // Audio call enabled flag.
+    boolean audioCallEnabled = sharedPrefGetBoolean(R.string.pref_audiocall_key,
+        CallActivity.EXTRA_AUDIO_CALL, R.string.pref_audiocall_default, useValuesFromIntent);
+
+    // subscribe enabled flag.
+    boolean videoPullEnabled = sharedPrefGetBoolean(R.string.pref_pull_key,
+        CallActivity.EXTRA_PULL_MODE, R.string.pref_pull_default, useValuesFromIntent);
+
+    // publish enabled flag.
+    boolean videoPushEnabled = sharedPrefGetBoolean(R.string.pref_push_key,
+        CallActivity.EXTRA_PUSH_MODE, R.string.pref_push_default, useValuesFromIntent);
+
     boolean streamEncrypt = sharedPrefGetBoolean(R.string.pref_streamencrypt_key,
             CallActivity.EXTRA_STREAM_ENCRYPT, R.string.pref_streamencrypt_default, useValuesFromIntent);
+
+    boolean recordAudio = sharedPrefGetBoolean(R.string.pref_audiorecord_key,
+            CallActivity.EXTRA_RECORD_AUDIO, R.string.pref_audiorecord_default, useValuesFromIntent);
 
     // Use screencapture option.
     boolean useScreencapture = sharedPrefGetBoolean(R.string.pref_screencapture_key,
@@ -584,20 +594,26 @@ public class ConnectActivity extends Activity {
         R.string.pref_tracing_default, useValuesFromIntent);
 
     // Start AppRTCMobile activity.
-    String tokenId = tokenEditText.getText().toString();
-    Log.d(TAG, "Connecting to room " + roomId + " at URL " + roomUrl + ",token " + tokenId);
+    String userId = userIdEditText.getText().toString();
+    String sign = signEditText.getText().toString();
+    Log.d(TAG, "Connecting to room " + roomId + " at URL " + roomUrl + ",userId:" + userId);
     if (/**validateUrl(roomUrlSpinner)**/true) {
       //Uri uri = Uri.parse(roomUrlSpinner);
       Intent intent = new Intent(this, CallActivity.class);
       //intent.setData(uri);
       intent.putExtra(CallActivity.EXTRA_ROOM_URL,roomUrl);
       intent.putExtra(CallActivity.EXTRA_ROOMID, roomId);
-      intent.putExtra(CallActivity.EXTRA_TOKENID, tokenId);
+      intent.putExtra(CallActivity.EXTRA_USERID, userId);
+      intent.putExtra(CallActivity.EXTRA_SIGN,sign);
       intent.putExtra(CallActivity.EXTRA_LOOPBACK, loopback);
       intent.putExtra(CallActivity.EXTRA_VIDEO_CALL, videoCallEnabled);
+      intent.putExtra(CallActivity.EXTRA_AUDIO_CALL, audioCallEnabled);
+      intent.putExtra(CallActivity.EXTRA_PULL_MODE,videoPullEnabled);
+      intent.putExtra(CallActivity.EXTRA_PUSH_MODE,videoPushEnabled);
       intent.putExtra(CallActivity.EXTRA_STREAM_ENCRYPT,streamEncrypt);
+      intent.putExtra(CallActivity.EXTRA_RECORD_AUDIO,recordAudio);
       intent.putExtra(CallActivity.EXTRA_HWCODEC_OPEN,hwCodecOpened);
-      intent.putExtra(CallActivity.EXTRA_CALL_MODE,callMode);
+      intent.putExtra(CallActivity.EXTRA_BIZNAME, bizName);
       intent.putExtra(CallActivity.EXTRA_SCREENCAPTURE, useScreencapture);
       intent.putExtra(CallActivity.EXTRA_CAMERA2, useCamera2);
       intent.putExtra(CallActivity.EXTRA_BEAUTIFY,useBeautify);

@@ -9,6 +9,22 @@
             android:title="@string/pref_videocall_title"
             android:dialogTitle="@string/pref_videocall_dlg"
             android:defaultValue="@string/pref_videocall_default" />
+        <CheckBoxPreference
+            android:key="@string/pref_audiocall_key"
+            android:title="@string/pref_audiocall_title"
+            android:dialogTitle="@string/pref_audiocall_dlg"
+            android:defaultValue="@string/pref_audiocall_default" />
+        <CheckBoxPreference
+            android:key="@string/pref_push_key"
+            android:title="@string/pref_push_title"
+            android:dialogTitle="@string/pref_push_dlg"
+            android:defaultValue="@string/pref_push_default" />
+
+        <CheckBoxPreference
+            android:key="@string/pref_pull_key"
+            android:title="@string/pref_pull_title"
+            android:dialogTitle="@string/pref_pull_dlg"
+            android:defaultValue="@string/pref_pull_default" />
 
         <CheckBoxPreference
             android:key="@string/pref_streamencrypt_key"
@@ -169,6 +185,12 @@
             android:title="@string/pref_disable_built_in_aec_title"
             android:dialogTitle="@string/pref_disable_built_in_aec_dlg"
             android:defaultValue="@string/pref_disable_built_in_aec_default" />
+
+        <CheckBoxPreference
+            android:key="@string/pref_audiorecord_key"
+            android:title="@string/pref_audiorecord_title"
+            android:dialogTitle="@string/pref_audiorecord_dlg"
+            android:defaultValue="@string/pref_audiorecord_default" />
 
         <CheckBoxPreference
             android:key="@string/pref_disable_built_in_agc_key"

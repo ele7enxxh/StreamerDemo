@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package com.alipay.multimedia.artvc.streamerdemo;
+package org.appspot.apprtc;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,11 +27,16 @@ import android.widget.Toast;
 import com.alipay.multimedia.streamer.api.ArtvcStreamer;
 import com.alipay.multimedia.streamer.api.StreamerConfig;
 import com.alipay.multimedia.streamer.api.StreamerConstants;
-import com.alipay.multimedia.streamer.api.StreamerErrorCode;
+import com.alipay.multimedia.streamer.api.StreamerCode;
 import com.alipay.multimedia.streamer.util.AppRTCUtils;
 
 import org.webrtc.RendererCommon;
 import org.webrtc.StatsReport;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Activity for peer connection call setup, call waiting
@@ -40,11 +45,16 @@ import org.webrtc.StatsReport;
 public class CallActivity extends Activity implements CallFragment.OnCallEvents {
   public static final String EXTRA_ROOM_URL = "org.appspot.apprtc.ROOM_URL";
   public static final String EXTRA_ROOMID = "org.appspot.apprtc.ROOMID";
-  public static final String EXTRA_TOKENID = "org.appspot.apprtc.TOKENID";
+  public static final String EXTRA_USERID = "org.appspot.apprtc.USERID";
+  public static final String EXTRA_SIGN = "org.appspot.apprtc.SIGN";
   public static final String EXTRA_LOOPBACK = "org.appspot.apprtc.LOOPBACK";
   public static final String EXTRA_VIDEO_CALL = "org.appspot.apprtc.VIDEO_CALL";
+  public static final String EXTRA_AUDIO_CALL = "org.appspot.apprtc.AUDIO_CALL";
+  public static final String EXTRA_PULL_MODE = "org.appspot.apprtc.PULL_MODE";
+  public static final String EXTRA_PUSH_MODE = "org.appspot.apprtc.PUSH_MODE";
   public static final String EXTRA_STREAM_ENCRYPT = "org.appspot.apprtc.STREAM_ENCRYPT";
-  public static final String EXTRA_CALL_MODE = "org.appspot.apprtc.CALL_MODE";
+  public static final String EXTRA_RECORD_AUDIO = "org.appspot.apprtc.RECORD_AUDIO";
+  public static final String EXTRA_BIZNAME = "org.appspot.apprtc.BIZNAME";
   public static final String EXTRA_SCREENCAPTURE = "org.appspot.apprtc.SCREENCAPTURE";
   public static final String EXTRA_CAMERA2 = "org.appspot.apprtc.CAMERA2";
   public static final String EXTRA_BEAUTIFY = "org.appspot.apprtc.BEAUTIFY";
@@ -133,13 +143,18 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
 
   private ArtvcStreamer streamer;
   private StreamerConfig config;
+  private String bizName;
   private String roomId;
   private String token;
+  private String sign;
   private String userId;
+
+  private final List<View> renders = new ArrayList<View>();
+  private final Map<String,View> activeRenders = new HashMap<>();
 
   private ArtvcStreamer.OnErrorListener errorListener = new ArtvcStreamer.OnErrorListener() {
     @Override
-    public void onError(StreamerErrorCode what, String id, String msg) {
+    public void onError(StreamerCode what, String id, String msg) {
       StringBuilder error = new StringBuilder();
       error.append(what).append('\n')
               .append("id:").append(id).append('\n')
@@ -149,7 +164,7 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
         case STREAMER_ERROR_ICE_ERROR:
           Log.e(TAG,"ice error,begin to retry");
           toggleCallControlFragmentVisibility();
-          streamer.restartStream(StreamerConstants.DEFAULT_SIGNATURE);
+          //streamer.restartStream(StreamerConstants.DEFAULT_SIGN);
           break;
         case STREAMER_ERROR_FROM_CAMERA:
           Log.e(TAG,"camera " + id + " error:" + msg);
@@ -164,10 +179,10 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
 
   private ArtvcStreamer.OnInfoListener infoListener = new ArtvcStreamer.OnInfoListener() {
     @Override
-    public void onInfo(StreamerErrorCode what, String id, Object obj) {
+    public void onInfo(StreamerCode what, String id, Object obj) {
       Log.i(TAG,"Info:" + what);
       switch (what){
-        case STREAMER_INFO_CREATE_ROOM_SUCCESS:
+        case STREAMER_INFO_GET_ROOM_INFO_SUCCESS:
           roomId = id;
           token = (String)obj;
           toggleCallControlFragmentVisibility();
@@ -178,6 +193,38 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
           break;
         case STREAMER_INFO_PUSH_SUCCESS:
           Log.i(TAG,id + " stream to server success");
+          break;
+        case STREAMER_INFO_ON_LOCAL_STREAM_TO_RENDER:
+          for(View view: renders) {
+            if(view.getVisibility() == View.INVISIBLE){
+                streamer.showLocalStream(id, view);
+                activeRenders.put(id,view);
+                break;
+            }
+          }
+          break;
+        case STREAMER_INFO_ON_REMOTE_STREAM_TO_RENDER:
+          for(View view: renders) {
+            if(view.getVisibility() == View.INVISIBLE){
+              streamer.showRemoteStream(id, view);
+              activeRenders.put(id,view);
+              break;
+            }
+          }
+          break;
+        case STREAMER_INFO_ON_STREAM_TO_DISAPEAR:
+        case STREAMER_INFO_ON_RMV_STREAM:
+          View view = activeRenders.get(id);
+          if(view != null){
+            view.setVisibility(View.INVISIBLE);
+            activeRenders.remove(id);
+          }
+          //两人视频的场景，对方已经退出
+          int active = streamer.getActiveConnectionNum();
+          Log.i(TAG,"some one leave,active:" + active);
+          if(active <= 1){
+            disconnect();
+          }
           break;
       }
     }
@@ -210,6 +257,19 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
       }
     }
 
+    renders.add(findViewById(R.id.video_view1));
+    renders.add(findViewById(R.id.video_view2));
+    renders.add(findViewById(R.id.video_view3));
+    renders.add(findViewById(R.id.video_view4));
+    renders.add(findViewById(R.id.video_view5));
+    renders.add(findViewById(R.id.video_view6));
+    renders.add(findViewById(R.id.video_view7));
+    renders.add(findViewById(R.id.video_view8));
+    renders.add(findViewById(R.id.video_view9));
+    for(View view:renders){
+      view.setVisibility(View.INVISIBLE);
+    }
+
     //Uri roomUri = intent.getData();
     String roomUri = intent.getStringExtra(EXTRA_ROOM_URL);
     if (roomUri == null) {
@@ -219,15 +279,25 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
       finish();
       return;
     }
+    bizName = intent.getStringExtra(EXTRA_BIZNAME);
 
     // Get Intent parameters.
     roomId = intent.getStringExtra(EXTRA_ROOMID);
-    token = intent.getStringExtra(EXTRA_TOKENID);
-    Log.d(TAG, "Room ID: " + roomId + ",token : " + token);
+    sign = intent.getStringExtra(EXTRA_SIGN);
+    userId = intent.getStringExtra(EXTRA_USERID);
+    if(TextUtils.isEmpty(userId)){
+      userId = String.valueOf(System.currentTimeMillis());
+    }
 
     String codecName = intent.getStringExtra(EXTRA_VIDEOCODEC);
     Boolean openHwEncode = intent.getBooleanExtra(EXTRA_HWCODEC_OPEN,false);
     Boolean streamEncrypted = intent.getBooleanExtra(EXTRA_STREAM_ENCRYPT,true);
+    Boolean recordAudio = intent.getBooleanExtra(EXTRA_RECORD_AUDIO,false);
+    Boolean pullMode = intent.getBooleanExtra(EXTRA_PULL_MODE,false);
+    Boolean pushMode = intent.getBooleanExtra(EXTRA_PUSH_MODE,false);
+    Boolean videoCall = intent.getBooleanExtra(EXTRA_VIDEO_CALL,false);
+    Boolean audioCall = intent.getBooleanExtra(EXTRA_AUDIO_CALL,false);
+    int videoFps = intent.getIntExtra(EXTRA_VIDEO_FPS,15);
 
     // Create CPU monitor
     cpuMonitor = new CpuMonitor(this);
@@ -246,10 +316,6 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
     ft.add(R.id.hud_fragment_container, hudFragment);
     ft.commit();
 
-    userId = String.valueOf(System.currentTimeMillis());
-    if(!TextUtils.isEmpty(token)){
-      userId = token;
-    }
     int targetEncWidth = intent.getIntExtra(EXTRA_ENCODER_VIDEO_WIDTH,640);
     int targetEncHeight = intent.getIntExtra(EXTRA_ENCODER_VIDEO_HEIGHT,360);
     int targetEncBitrate = intent.getIntExtra(EXTRA_VIDEO_BITRATE,400);
@@ -262,13 +328,52 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
     if(!streamEncrypted){
       config.addOrUpdateOption(StreamerConstants.OPTION_KEY_DTLS_SRTP_KEY_AGREEMENT_CONSTRAINT,StreamerConstants.FALSE);
     }
+    if(recordAudio){
+      config.addOrUpdateOption(StreamerConstants.OPTION_KEY_SAVE_AUDIO_TO_FILE,StreamerConstants.TRUE);
+    }
     config.mTargetResolution = AppRTCUtils.getProfile(targetEncWidth,targetEncHeight);
     config.mVideoKBitrate = targetEncBitrate;
+
+    int idx = bizName.indexOf('_');
+    config.mBizName = bizName.substring(0,idx);
+    config.mRtcMode = bizName.substring(idx+1);
+    config.mSignature = sign;
+
+    //如果roomId为空，那么要设置为主叫
+    if(TextUtils.isEmpty(roomId)) {
+      config.mRole = StreamerConstants.STREAMER_ROLE_CREATOR;
+    }else{
+      config.mRole = StreamerConstants.STREAMER_ROLE_JOINER;
+      config.mRoomId = roomId;
+    }
+
+    //音频还是视频通话
+    if(videoCall && audioCall){
+      config.mCallModel = StreamerConstants.STREAMER_CALL_VIDEO_AUDIO;
+    }else if(videoCall){
+      config.mCallModel = StreamerConstants.STREAMER_CALL_ONLY_VIDEO;
+    }else if(audioCall){
+      config.mCallModel = StreamerConstants.STREAMER_CALL_ONLY_AUDIO;
+    }
+
+    //推流还是拉流
+    if(pullMode && pushMode){
+      config.mStreamModel = StreamerConstants.STREAMER_MODE_PUSH_PULL;
+    }else if(pullMode){
+      config.mStreamModel = StreamerConstants.STREAMER_MODE_ONLY_PULL;
+    }else if(pushMode){
+      config.mStreamModel = StreamerConstants.STREAMER_MODE_ONLY_PUSH;
+    }
+    config.mPreviewFrameRate = videoFps;
+    config.mTargetFrameRate = videoFps;
+    Log.d(TAG, "room: " + roomId + ",sign:" + sign + ",bizName:" + bizName +
+          ",video:" + videoCall + ",audio:" + audioCall +",pull:" + pullMode
+          + ",push:" + pushMode + ",fps:" + videoFps);
 
     streamer = new ArtvcStreamer(this,config);
     streamer.setOnErrorListener(errorListener);
     streamer.setOnInfoListener(infoListener);
-    streamer.startStream(StreamerConstants.DEFAULT_SIGNATURE);
+    streamer.startStream(StreamerConstants.DEFAULT_SIGN);
   }
 
 
@@ -279,7 +384,7 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
     mediaProjectionPermissionResultCode = resultCode;
     mediaProjectionPermissionResultData = data;
 
-    streamer.startStream(StreamerConstants.DEFAULT_SIGNATURE);
+    streamer.startStream(StreamerConstants.DEFAULT_SIGN);
   }
 
 
@@ -307,6 +412,8 @@ public class CallActivity extends Activity implements CallFragment.OnCallEvents 
       logToast.cancel();
     }
     activityRunning = false;
+    renders.clear();
+    activeRenders.clear();
     super.onDestroy();
   }
 

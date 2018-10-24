@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.alipay.multimedia.artvc.streamerdemo"
+          package="org.appspot.apprtc"
           android:versionCode="1"
           android:versionName="1.0">
 
@@ -30,7 +30,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name">
         <activity
-            android:name="com.alipay.multimedia.artvc.streamerdemo.ConnectActivity"
+            android:name=".ConnectActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -52,11 +52,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.alipay.multimedia.artvc.streamerdemo.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/settings_name">
         </activity>
         <activity
-            android:name="com.alipay.multimedia.artvc.streamerdemo.CallActivity"
+            android:name=".CallActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="fullUser"

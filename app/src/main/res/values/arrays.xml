@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="callModes">
-        <item>Conference_Test</item>
-        <item>Conference</item>
-        <item>P2P</item>
-        <item>Licode</item>
-    </string-array>
-    <string-array name="roomUrls_Conference">
-        <item>wss://artvcroom.alipay.com:443/ws</item>
+    <string-array name="bizNames">
+        <item>demo_pmp</item>
+        <item>demo_p2p</item>
+        <item>wwj_pmp</item>
+        <item>stock_p2p</item>
+        <item>aligame_p2p</item>
+        <item>aligame_pmp</item>
     </string-array>
 
-    <string-array name="roomUrls_Conference_Test">
-        <item>ws://artvcroom.d3119.dl.alipaydev.com/ws</item>
-    </string-array>
-    <string-array name="roomUrls_P2P">
+    <string-array name="roomUrls">
+        <item>wss://artvcroomdev.dl.alipaydev.com/ws</item>
+        <item>wss://artvcroom.alipay.com:443/ws</item>
         <item>https://www.antmedia-apprtc.top</item>
-    </string-array>
-    <string-array name="roomUrls_Licode">
-        <item>http://120.76.245.78:3001</item>
     </string-array>
 
     <string-array name="videoResolutions">

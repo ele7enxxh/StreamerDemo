@@ -52,7 +52,7 @@
         android:layout_marginBottom="8dp">
 
         <EditText
-            android:id="@+id/token_edittext"
+            android:id="@+id/sign_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -65,7 +65,30 @@
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/token"/>
+            android:text="@string/sign"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="8dp">
+
+        <EditText
+            android:id="@+id/userid_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:inputType="text"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/userId"/>
 
     </LinearLayout>
     <LinearLayout
@@ -75,7 +98,7 @@
         android:gravity="center"
         android:layout_marginBottom="8dp">
         <Spinner
-            android:id="@+id/call_mode"
+            android:id="@+id/biz_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></Spinner>
 
